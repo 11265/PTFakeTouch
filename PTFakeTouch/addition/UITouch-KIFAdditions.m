@@ -34,6 +34,7 @@ typedef struct {
     return [self initAtPoint:centerPoint inView:view];
 }
 
+
 - (id)initAtPoint:(CGPoint)point inWindow:(UIWindow *)window;
 {
     self = [super init];
@@ -51,13 +52,23 @@ typedef struct {
     
     [self setView:hitTestView];
     [self setPhase:UITouchPhaseBegan];
-    NSOperatingSystemVersion iOS14 = {14, 0, 0};
-    if ([NSProcessInfo instancesRespondToSelector:@selector(isOperatingSystemAtLeastVersion:)] && [[NSProcessInfo new] isOperatingSystemAtLeastVersion:iOS14]) {
-        [self _setIsTapToClick:NO];
-    } else {
+    
+    
+    // Fixed bug: iOS 15 无法相应button的点击事件
+    // 来自 https://github.com/kif-framework/KIF/issues/1152
+    if ([self respondsToSelector:@selector(_setIsFirstTouchForView:)]) {
         [self _setIsFirstTouchForView:YES];
-        [self setIsTap:NO];
+    } else {
+        [self _setIsTapToClick:YES];
+
+        // We modify the touchFlags ivar struct directly.
+        // First entry is _firstTouchForView
+        Ivar flagsIvar = class_getInstanceVariable(object_getClass(self), "_touchFlags");
+        ptrdiff_t touchFlagsOffset = ivar_getOffset(flagsIvar);
+        char *flags = (__bridge void *)self + touchFlagsOffset;
+        *flags = *flags | (char)0x01;
     }
+
     [self setTimestamp:[[NSProcessInfo processInfo] systemUptime]];
     if ([self respondsToSelector:@selector(setGestureView:)]) {
         [self setGestureView:hitTestView];
@@ -82,13 +93,19 @@ typedef struct {
     [self _setLocationInWindow:CGPointMake(0, 0) resetPrevious:YES];
     
     UIView *hitTestView = [window hitTest:point withEvent:nil];
-    
-    NSOperatingSystemVersion iOS14 = {14, 0, 0};
-    if ([NSProcessInfo instancesRespondToSelector:@selector(isOperatingSystemAtLeastVersion:)] && [[NSProcessInfo new] isOperatingSystemAtLeastVersion:iOS14]) {
-        [self _setIsTapToClick:NO];
-    } else {
+
+    if ([self respondsToSelector:@selector(_setIsFirstTouchForView:)]) {
+//        [self setIsTap:YES];
         [self _setIsFirstTouchForView:YES];
-        [self setIsTap:NO];
+    } else {
+        [self _setIsTapToClick:YES];
+        // We modify the touchFlags ivar struct directly.
+        // First entry is _firstTouchForView
+        Ivar flagsIvar = class_getInstanceVariable(object_getClass(self), "_touchFlags");
+        
+        ptrdiff_t touchFlagsOffset = ivar_getOffset(flagsIvar);
+        char *flags = (__bridge void *)self + touchFlagsOffset;
+        *flags = *flags | (char)0x01;
     }
         
     [self setView:hitTestView];
@@ -106,7 +123,7 @@ typedef struct {
     }
 }
 
-- (id)initTouch;
+- (id)initTouch
 {
     //DLog(@"init...touch...");
     self = [super init];
@@ -124,13 +141,21 @@ typedef struct {
     [self setView:hitTestView];
     [self setPhase:UITouchPhaseEnded];
     //DLog(@"init...touch...setPhase 3");
-    NSOperatingSystemVersion iOS14 = {14, 0, 0};
-    if ([NSProcessInfo instancesRespondToSelector:@selector(isOperatingSystemAtLeastVersion:)] && [[NSProcessInfo new] isOperatingSystemAtLeastVersion:iOS14]) {
-        [self _setIsTapToClick:NO];
-    } else {
+    
+    // 修复iOS15 UIButton无法响应button的点击事件问题
+    if ([self respondsToSelector:@selector(_setIsFirstTouchForView:)]) {
+//        [self setIsTap:YES];
         [self _setIsFirstTouchForView:YES];
-        [self setIsTap:NO];
+    } else {
+        [self _setIsTapToClick:YES];
+        // We modify the touchFlags ivar struct directly.
+        // First entry is _firstTouchForView
+        Ivar flagsIvar = class_getInstanceVariable(object_getClass(self), "_touchFlags");
+        ptrdiff_t touchFlagsOffset = ivar_getOffset(flagsIvar);
+        char *flags = (__bridge void *)self + touchFlagsOffset;
+        *flags = *flags | (char)0x01;
     }
+
     [self setTimestamp:[[NSProcessInfo processInfo] systemUptime]];
     if ([self respondsToSelector:@selector(setGestureView:)]) {
         [self setGestureView:hitTestView];
