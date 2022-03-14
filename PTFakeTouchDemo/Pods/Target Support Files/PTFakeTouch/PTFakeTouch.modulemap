@@ -1,0 +1,6 @@
+framework module PTFakeTouch {
+  umbrella header "PTFakeTouch-umbrella.h"
+
+  export *
+  module * { export * }
+}

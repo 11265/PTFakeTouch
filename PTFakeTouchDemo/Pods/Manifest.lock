@@ -1,0 +1,18 @@
+PODS:
+  - PTFakeTouch (0.1.0):
+    - PTFakeTouch/App (= 0.1.0)
+  - PTFakeTouch/App (0.1.0)
+
+DEPENDENCIES:
+  - PTFakeTouch (from `../`)
+
+EXTERNAL SOURCES:
+  PTFakeTouch:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  PTFakeTouch: 8367fdc43e1d1e4817a019fb06c8722de7d6e7b6
+
+PODFILE CHECKSUM: b1fb39cb01cbd4e37c260836cfc6aa576f134348
+
+COCOAPODS: 1.10.2

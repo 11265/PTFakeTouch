@@ -1,0 +1,54 @@
+{
+  "name": "PTFakeTouch",
+  "version": "0.1.0",
+  "summary": "Simulate touch events for iOS［User mode］",
+  "description": "Simulate touch events for iOS［User mode］\nJust build it and add this framework to your project. Then you can use it.\nAddtions are from kif.\nhttps://github.com/Ret70/PTFakeTouch",
+  "homepage": "https://github.com/tuxi/PTFakeTouch",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "isaced": "seyooe@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/tuxi/PTFakeTouch.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "9.0"
+  },
+  "requires_arc": true,
+  "default_subspecs": "App",
+  "frameworks": [
+    "CoreGraphics",
+    "Foundation",
+    "IOKit",
+    "QuartzCore",
+    "WebKit",
+    "XCTest"
+  ],
+  "vendored_frameworks": "PTFakeTouch/Libs/IOKit.framework",
+  "prefix_header_file": "PTFakeTouch/PTFakeTouch.h",
+  "subspecs": [
+    {
+      "name": "App",
+      "public_header_files": "PTFakeTouch/PTFakeMetaTouch.h",
+      "source_files": [
+        "PTFakeTouch/Addition/UITouch-KIFAdditions.{h,m}",
+        "PTFakeTouch/Addition/IOHIDEvent+KIF.{h,m}",
+        "PTFakeTouch/Addition/UIEvent+KIFAdditions.{h,m}",
+        "PTFakeTouch/Addition/UIView-KIFAdditions.{h,m}",
+        "PTFakeTouch/PTFakeMetaTouch.{h,m}",
+        "PTFakeTouch/Addition/UIWindow-KIFAdditions.{h,m}",
+        "PTFakeTouch/Addition/UIApplication-KIFAdditions.{h,m}",
+        "PTFakeTouch/LoadableCategory.h",
+        "PTFakeTouch/LoadableCategory.h",
+        "PTFakeTouch/FixCategoryBug.h",
+        "PTFakeTouch/PTFakeTouch.h",
+        "PTFakeTouch/PTFakeMetaTouch.h",
+        "PTFakeTouch/PTFakeTouch.h"
+      ]
+    }
+  ]
+}
