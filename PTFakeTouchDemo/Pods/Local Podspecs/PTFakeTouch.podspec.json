@@ -20,15 +20,7 @@
   },
   "requires_arc": true,
   "default_subspecs": "App",
-  "frameworks": [
-    "CoreGraphics",
-    "Foundation",
-    "IOKit",
-    "QuartzCore",
-    "WebKit",
-    "XCTest"
-  ],
-  "vendored_frameworks": "PTFakeTouch/Libs/IOKit.framework",
+  "vendored_frameworks": "Libs/IOKit.framework",
   "prefix_header_file": "PTFakeTouch/PTFakeTouch.h",
   "subspecs": [
     {

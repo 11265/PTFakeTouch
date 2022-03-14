@@ -23,8 +23,8 @@ Pod::Spec.new do |s|
 
 
   # 依赖的frameworks
-  s.frameworks       = ["CoreGraphics", "Foundation", 'IOKit', 'QuartzCore', 'WebKit', 'XCTest']
-  s.vendored_frameworks = 'PTFakeTouch/Libs/IOKit.framework'
+  #s.frameworks       = ["CoreGraphics", "Foundation", 'IOKit', 'QuartzCore', 'WebKit']
+  s.vendored_frameworks = 'Libs/IOKit.framework'
   #s.vendored_libraries = 'PTFakeTouch/**/*.a'
   #s.libraries = ['c++', 'z', 'sqlite3']
 #  s.exclude_files = 'PTFakeTouch/XCTestCase-KIFAdditions.{h,m}'
