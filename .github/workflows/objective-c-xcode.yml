@@ -22,7 +22,8 @@ jobs:
         run: |
           find . -name "*.m" -type f -print0 | xargs -0 sed -i '' 's/UIWebView/WKWebView/g'
           find . -name "*.h" -type f -print0 | xargs -0 sed -i '' 's/UIWebView/WKWebView/g'
-          find . -name "*.m" -type f -exec sh -c 'grep -q "#import <WebKit/WebKit.h>" "$0" || sed -i "" "1i#import <WebKit/WebKit.h>" "$0"' {} \;
+          find . -name "*.m" -type f -print0 | xargs -0 sed -i '' '1i\
+          #import <WebKit/WebKit.h>'
 
       - name: Update UIApplication usage for Mac Catalyst
         run: |
@@ -41,6 +42,13 @@ jobs:
           scheme: ${{ 'default' }}
         run: |
           if [ $scheme = default ]; then scheme=$(cat default); fi
-          file_to_build=$(ls -1 | grep -Ei '\.xcworkspace$|\.xcodeproj$' | head -n 1)
-          if [[ $file_to_build == *.xcworkspace ]]; then filetype_parameter="workspace"; else filetype_parameter="project"; fi
+          if [ "`ls -A | grep -i \\.xcworkspace\$`" ]; then filetype_parameter="workspace" && file_to_build="`ls -A | grep -i \\.xcworkspace\$`"; else filetype_parameter="project" && file_to_build="`ls -A | grep -i \\.xcodeproj\$`"; fi
+          file_to_build=`echo $file_to_build | awk '{$1=$1;print}'`
           xcodebuild clean build analyze -scheme "$scheme" -"$filetype_parameter" "$file_to_build" -destination 'platform=macOS,arch=arm64' | xcpretty && exit ${PIPESTATUS[0]}
+
+      - name: Verify IOKit framework
+        run: |
+          if [ ! -d "/System/Library/Frameworks/IOKit.framework" ]; then
+            echo "IOKit framework not found."
+            exit 1
+          fi
