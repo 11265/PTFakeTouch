@@ -19,15 +19,17 @@ jobs:
         run: |
           find . -type f
 
-      - name: Replace UIWebView with WKWebView
+      - name: Replace UIWebView with WKWebView and import WebKit
         run: |
           find . -name "*.m" -type f -print0 | xargs -0 sed -i '' 's/UIWebView/WKWebView/g'
           find . -name "*.h" -type f -print0 | xargs -0 sed -i '' 's/UIWebView/WKWebView/g'
+          find . -name "*.m" -type f -print0 | xargs -0 sed -i '' '1i\
+          #import <WebKit/WebKit.h>'
 
-      - name: Update deprecated keyWindow usage
+      - name: Update UIApplication usage for Mac Catalyst
         run: |
-          find . -name "*.m" -type f -print0 | xargs -0 sed -i '' 's/\[\[UIApplication sharedApplication\] keyWindow\]/UIApplication.shared.windows.first(where: { $0.isKeyWindow })/g'
-          find . -name "*.m" -type f -print0 | xargs -0 sed -i '' 's/\[UIApplication sharedApplication\]\.keyWindow/UIApplication.shared.windows.first(where: { $0.isKeyWindow })/g'
+          find . -name "*.m" -type f -print0 | xargs -0 sed -i '' 's/UIApplication\.shared/[UIApplication sharedApplication]/g'
+          find . -name "*.m" -type f -print0 | xargs -0 sed -i '' 's/\.windows\.first(where: { \$0\.isKeyWindow })/\.windows\.firstObject/g'
 
       - name: Set Default Scheme
         run: |
