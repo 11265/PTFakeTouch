@@ -1,4 +1,4 @@
-name: Xcode - Build and Analyze
+name: List Files and Build
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
+  list-and-build:
     runs-on: macos-latest
 
     steps:
@@ -29,9 +29,6 @@ jobs:
         run: |
           find . -name "*.m" -type f -print0 | xargs -0 sed -i '' 's/UIApplication\.shared/[UIApplication sharedApplication]/g'
           find . -name "*.m" -type f -print0 | xargs -0 sed -i '' 's/\.windows\.first(where: { \$0\.isKeyWindow })/\.windows\.firstObject/g'
-
-      - name: Install CocoaPods dependencies
-        run: pod install
 
       - name: Set Default Scheme
         run: |
