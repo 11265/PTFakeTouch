@@ -14,11 +14,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Xcode
-        uses: maxim-lobanov/setup-xcode@v2
-        with:
-          xcode-version: '15.4'
-
       - name: List all files
         run: |
           find . -type f
