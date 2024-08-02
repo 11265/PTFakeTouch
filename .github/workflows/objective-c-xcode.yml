@@ -8,12 +8,16 @@ on:
 
 jobs:
   build:
-    name: Build and analyse default scheme using xcodebuild command
     runs-on: macos-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v2
+        with:
+          xcode-version: '15.4'
 
       - name: List all files
         run: |
@@ -30,6 +34,9 @@ jobs:
         run: |
           find . -name "*.m" -type f -print0 | xargs -0 sed -i '' 's/UIApplication\.shared/[UIApplication sharedApplication]/g'
           find . -name "*.m" -type f -print0 | xargs -0 sed -i '' 's/\.windows\.first(where: { \$0\.isKeyWindow })/\.windows\.firstObject/g'
+
+      - name: Install CocoaPods dependencies
+        run: pod install
 
       - name: Set Default Scheme
         run: |
